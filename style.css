@@ -15,10 +15,10 @@ overflow:hidden;
 
 video{
 position:fixed;
-top:500%;
+top:63%;
 left:50%;
 width:100vw;
-height:100vh;
+height:125vh;
 object-fit:cover;
 transform:translate(-50%,-50%);
 z-index:-3;
@@ -26,6 +26,7 @@ pointer-events:none;
 }
 
 /* overlay */
+
 .overlay{
 position:fixed;
 width:100%;
@@ -59,25 +60,137 @@ z-index:6;
 pointer-events:none;
 }
 
-/* GLITCHlay */
-#glitchOverlay{
+/* WARNING SCREEN */
+
+.warningScreen{
 position:fixed;
-width:100%;
-height:100%;
-z-index:40;
+inset:0;
+z-index:200;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:24px;
+background:rgba(0,0,0,0.38);
+backdrop-filter:blur(16px) saturate(135%);
+-webkit-backdrop-filter:blur(16px) saturate(135%);
+transition:opacity .45s ease, transform .45s ease;
+}
+
+.warningScreen.hidden{
 opacity:0;
 pointer-events:none;
-transition:opacity .2s;
+transform:scale(1.02);
 }
 
-#glitchOverlay img{
-width:100%;
-height:100%;
-object-fit:cover;
+.warningCard{
+width:min(920px, 94vw);
+padding:32px 28px 26px;
+border:1px solid rgba(255,255,255,0.18);
+border-radius:28px;
+background:rgba(25,25,25,0.34);
+box-shadow:0 20px 70px rgba(0,0,0,0.55);
+text-align:center;
 }
 
-#glitchOverlay.active{
-opacity:1;
+.warningIcon{
+width:120px;
+height:120px;
+object-fit:contain;
+display:block;
+margin:0 auto 18px;
+filter:drop-shadow(0 0 18px rgba(255,255,120,0.22));
+}
+
+.warningText{
+font-size:clamp(20px, 2.2vw, 32px);
+line-height:1.45;
+color:#ffd84d;
+text-shadow:0 0 12px rgba(255, 220, 90, 0.18);
+letter-spacing:.4px;
+}
+
+.warningComment{
+margin-top:12px;
+font-size:16px;
+color:rgba(255,255,255,0.82);
+}
+
+.warningActions{
+display:flex;
+justify-content:center;
+gap:14px;
+flex-wrap:wrap;
+margin-top:22px;
+}
+
+.warningProceed,
+.warningQuit{
+border:none;
+padding:14px 22px;
+font-size:20px;
+font-family:"Courier New",monospace;
+cursor:pointer;
+border-radius:14px;
+transition:transform .15s ease, filter .15s ease, opacity .15s ease;
+}
+
+.warningProceed{
+background:#d21f2b;
+color:white;
+box-shadow:0 0 18px rgba(210,31,43,0.32);
+animation:proceedGlow 1.6s ease-in-out infinite;
+}
+
+.warningQuit{
+background:#f3f3f3;
+color:#111;
+box-shadow:0 0 18px rgba(255,255,255,0.18);
+}
+
+.warningProceed:hover,
+.warningQuit:hover{
+transform:translateY(-1px) scale(1.02);
+}
+
+@keyframes proceedGlow{
+0%,100%{
+filter:brightness(1);
+text-shadow:0 0 0 rgba(255,255,255,0);
+}
+50%{
+filter:brightness(1.08);
+text-shadow:0 0 10px rgba(255,255,255,0.12);
+}
+}
+
+/* VOLUME */
+
+.volumeDock{
+position:fixed;
+right:16px;
+bottom:16px;
+z-index:210;
+display:flex;
+align-items:center;
+gap:10px;
+padding:10px 12px;
+border:1px solid rgba(255,255,255,0.16);
+border-radius:16px;
+background:rgba(15,15,15,0.42);
+backdrop-filter:blur(12px);
+-webkit-backdrop-filter:blur(12px);
+color:white;
+font-size:14px;
+}
+
+.volumeDock input[type="range"]{
+width:140px;
+}
+
+.volumeDock span{
+min-width:42px;
+text-align:right;
+opacity:0.9;
 }
 
 /* MENU */
@@ -104,6 +217,21 @@ pointer-events:auto;
 
 .option.active{
 opacity:1;
+}
+
+#learn{
+animation:breatheGlow 2.5s ease-in-out infinite;
+}
+
+@keyframes breatheGlow{
+0%,100%{
+text-shadow:0 0 4px rgba(255,255,255,0.08);
+transform:translateY(0) scale(1);
+}
+50%{
+text-shadow:0 0 16px rgba(255,255,255,0.25), 0 0 26px rgba(240,220,255,0.16);
+transform:translateY(-1px) scale(1.02);
+}
 }
 
 .selector::before{
@@ -133,39 +261,73 @@ opacity:0;
 pointer-events:none;
 transition:opacity .5s;
 }
+
 .loadingScreen.active{
 opacity:1;
 pointer-events:all;
 }
+
 .loadingScreen img{
 width:200px;
 animation:float 2s ease-in-out infinite;
 }
+
 .loadingText{
 margin-top:20px;
 font-size:24px;
 }
+
 @keyframes float{
 0%{transform:translateY(0px);}
 50%{transform:translateY(-15px);}
 100%{transform:translateY(0px);}
 }
+
 /* FAQ PAGE */
 
 .learnPage{
 position:fixed;
-top:-100%;
+top:0;
+left:0;
 width:100%;
 height:100%;
 background:black;
-transition:top .6s;
-padding:80px 40px;
-overflow-y:auto;
+opacity:0;
+visibility:hidden;
+pointer-events:none;
+transition:opacity .5s ease;
 z-index:30;
+overflow:hidden;
+overflow-y:auto;
+overflow-x:hidden;
 }
+
 .learnPage.active{
-top:0;
+opacity:1;
+visibility:visible;
+pointer-events:auto;
 }
+
+.learnBgVideo{
+position:fixed;
+top:50%;
+left:50%;
+width:100vw;
+height:100vh;
+object-fit:cover;
+transform:translate(-50%,-50%);
+z-index:-3;
+pointer-events:none;
+}
+
+.learnShade{
+position:fixed;
+inset:0;
+background:radial-gradient(circle at center, rgba(0,0,0,0.1), rgba(0,0,0,0.92));
+z-index:-2;
+pointer-events:none;
+}
+
 .backBtn{
 display:none;
 position:fixed;
@@ -173,51 +335,178 @@ top:20px;
 left:20px;
 cursor:pointer;
 z-index:31;
+font-size:24px;
 }
+
 .learnPage.active .backBtn{
 display:block;
 }
 
-/* FAQ */
-
 .faqContainer{
-max-width:900px;
+position:relative;
+z-index:32;
+width:min(1180px, calc(100% - 80px));
+margin:80px auto 0;
+display:grid;
+grid-template-columns:repeat(4, minmax(0, 1fr));
+gap:22px;
 }
 
-.faq{
-background:rgba(20,20,20,0.9);
-padding:20px;
-margin-bottom:15px;
-cursor:pointer;
+.faqNode{
+display:flex;
+flex-direction:column;
+align-items:center;
 animation:faqFloat 5s ease-in-out infinite;
 }
 
-.faq:nth-child(2){animation-delay:1s;}
-.faq:nth-child(3){animation-delay:2s;}
-.faq:nth-child(4){animation-delay:3s;}
-.faq:nth-child(5){animation-delay:4s;}
-.faq:nth-child(6){animation-delay:2.5s;}
-.faq:nth-child(7){animation-delay:1.5s;}
-.faq:nth-child(8){animation-delay:3.5s;}
+.faqNode:nth-child(2){animation-delay:1s;}
+.faqNode:nth-child(3){animation-delay:2s;}
+.faqNode:nth-child(4){animation-delay:3s;}
+.faqNode:nth-child(5){animation-delay:4s;}
+.faqNode:nth-child(6){animation-delay:2.5s;}
+.faqNode:nth-child(7){animation-delay:1.5s;}
+.faqNode:nth-child(8){animation-delay:3.5s;}
 
 @keyframes faqFloat{
 0%{transform:translateY(0px);}
 50%{transform:translateY(-6px);}
 100%{transform:translateY(0px);}
 }
-.answer{
+
+.faqToggle{
+border:none;
+background:transparent;
+cursor:pointer;
+padding:0;
+line-height:0;
+}
+
+.faqToggle img{
+width:96px;
+height:96px;
+object-fit:contain;
+display:block;
+filter:drop-shadow(0 0 8px rgba(255,255,255,0.18));
+}
+
+.faqLabel{
+margin-top:6px;
+font-size:16px;
+letter-spacing:1px;
+opacity:0.8;
+text-align:center;
+}
+
+.faqDrop{
+width:100%;
+margin-top:0;
+padding:0 16px;
 max-height:0;
 overflow:hidden;
-transition:max-height .4s;
+opacity:0;
+transform:translateY(-6px) scale(0.98);
+transition:max-height .35s ease, opacity .25s ease, transform .35s ease, margin-top .35s ease, padding .35s ease;
+background:
+linear-gradient(135deg, rgba(35,10,55,0.96), rgba(10,10,10,0.96)),
+repeating-linear-gradient(
+45deg,
+rgba(255,255,255,0.05) 0px,
+rgba(255,255,255,0.05) 2px,
+transparent 2px,
+transparent 6px
+);
+border:1px solid rgba(200,160,255,0.35);
+box-shadow:0 0 18px rgba(130,70,200,0.18);
+}
+
+.faqNode.open .faqDrop{
+max-height:1000px;
+margin-top:12px;
+padding:16px;
+opacity:1;
+transform:translateY(0) scale(1);
+}
+
+.faqQuestion{
+font-size:18px;
+margin-bottom:10px;
+text-shadow:0 0 6px rgba(255,255,255,0.1);
+}
+
+.faqAnswer{
 line-height:1.5;
 white-space:normal;
 }
-.faq.open .answer{
-max-height:220px;
-margin-top:10px;
-}
-.answer a{
+
+.faqAnswer a{
 color:#9cf;
 text-decoration:underline;
 cursor:pointer;
+}
+
+@media (max-width: 1100px){
+.faqContainer{
+grid-template-columns:repeat(2, minmax(0, 1fr));
+}
+}
+
+@media (max-width: 650px){
+.faqContainer{
+grid-template-columns:1fr;
+}
+}
+
+/* TEXT GLITCH EFFECT */
+
+.glitchText{
+position:relative;
+color:white;
+font-weight:bold;
+letter-spacing:2px;
+}
+
+.glitchText::before,
+.glitchText::after{
+content:attr(data-text);
+position:absolute;
+left:0;
+top:0;
+width:100%;
+overflow:hidden;
+clip-path:inset(0 0 0 0);
+}
+
+.glitchText::before{
+left:2px;
+text-shadow:-2px 0 red;
+animation:glitch1 2s infinite linear alternate-reverse;
+}
+
+.glitchText::after{
+left:-2px;
+text-shadow:2px 0 cyan;
+animation:glitch2 2s infinite linear alternate-reverse;
+}
+
+@keyframes glitch1{
+0%{clip-path:inset(10% 0 80% 0);}
+20%{clip-path:inset(40% 0 20% 0);}
+40%{clip-path:inset(20% 0 60% 0);}
+60%{clip-path:inset(70% 0 10% 0);}
+80%{clip-path:inset(30% 0 40% 0);}
+100%{clip-path:inset(0 0 0 0);}
+}
+
+@keyframes glitch2{
+0%{clip-path:inset(80% 0 5% 0);}
+20%{clip-path:inset(20% 0 60% 0);}
+40%{clip-path:inset(60% 0 10% 0);}
+60%{clip-path:inset(30% 0 40% 0);}
+80%{clip-path:inset(10% 0 80% 0);}
+100%{clip-path:inset(0 0 0 0);}
+}
+
+.fadeOut{
+opacity:0 !important;
+transition:opacity .6s ease;
 }

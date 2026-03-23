@@ -8,21 +8,48 @@
 
 <body>
 
+<div class="warningScreen" id="warningScreen">
+    <div class="warningCard">
+        <img class="warningIcon" src="https://cdn.hackclub.com/019d191c-8239-70cd-b9da-81b265c17236/caution.png" alt="Warning sign">
+
+        <div class="warningText">
+            WARNING: VIEWER DISCRETION IS ADVISED. THE WEBSITE MAY CONTAIN LOUD NOISES AND WEIRD IMAGES THAT MAY TRIGGER CERTAIN PERSONS. PROCEED WITH CAUTION.
+        </div>
+
+        <div class="warningComment">ZoneOut is a horror theme based YSWS and the website, thus may have some level of spookyness! :p</div>
+
+        <div class="warningActions">
+            <button class="warningProceed" id="warningProceed" type="button">Proceed</button>
+            <button class="warningQuit" id="warningQuit" type="button">Quit</button>
+        </div>
+    </div>
+</div>
+
+<div class="volumeDock">
+    <label for="masterVolume">Volume</label>
+    <input id="masterVolume" type="range" min="0" max="100" value="35" aria-label="Volume">
+    <span id="volumeValue">35%</span>
+</div>
+
 <video autoplay muted loop playsinline>
-    <source src="https://cdn.hackclub.com/019d14d5-c391-76e0-95ee-6e9b70780a91/vidd.mp4" type="video/mp4">
+    <source src="https://cdn.hackclub.com/019d14f6-2cd2-7a84-81bf-d68825577d2c/ds.mp4" type="video/mp4">
 </video>
 
-<audio autoplay loop id="bgAudio">
+<audio loop id="bgAudio" preload="auto">
     <source src="https://cdn.hackclub.com/019d09b2-74cf-75cb-a4e5-828822608761/distorted.ogg" type="audio/ogg">
+</audio>
+
+<audio loop id="faqAudio" preload="auto">
+    <source src="https://cdn.hackclub.com/019d157e-42db-7c9d-a810-abcb9247cf07/faqmusic.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="uiClick" preload="auto">
+    <source src="https://cdn.hackclub.com/019d15a1-fb3f-7c96-96b2-7b1052138e08/buttonpress.mp3" type="audio/mpeg">
 </audio>
 
 <div class="overlay"></div>
 <div class="scanlines"></div>
 <div class="vignette"></div>
-
-<div id="glitchOverlay">
-    <img src="https://cdn.hackclub.com/019d0f6c-1e27-74cf-8f03-9d8d50ec5cc8/glitch.gif" alt="glitch overlay">
-</div>
 
 <div class="menu">
     <div class="title">Zone Out</div>
@@ -39,71 +66,130 @@
 </div>
 
 <div class="learnPage" id="learnPage">
+    <video class="learnBgVideo" autoplay muted loop playsinline preload="auto">
+        <source src="https://cdn.hackclub.com/019d1552-4f0e-7cc9-8b0c-86d538cd897e/glitcheffect.mp4" type="video/mp4">
+    </video>
+    <div class="learnShade"></div>
+
     <div class="backBtn" id="backBtn">← Back</div>
 
     <div class="faqContainer">
-        <div class="faq">
-            Q1: What is ZoneOut about?
-            <div class="answer">
-                ZoneOut is a YSWS where you create something themed around <b>horror</b>, <b>mystery</b> or <b>ARG</b>!
+
+        <div class="faqNode">
+            <button class="faqToggle" type="button" aria-expanded="false">
+                <img src="https://cdn.hackclub.com/019d155f-c68f-70bb-bfd9-047b7a7224bb/closed%20eye.png" alt="Q1 toggle">
+            </button>
+            <div class="faqLabel">What is ZoneOut about?</div>
+            <div class="faqDrop">
+                <div class="faqQuestion"></div>
+                <div class="faqAnswer">
+                    ZoneOut is a YSWS where you create something themed around <b>horror</b>, <b>mystery</b> or <b>ARG</b>!
+                </div>
             </div>
         </div>
 
-        <div class="faq">
-            Q2: What is the theme?
-            <div class="answer">
-                Horror, mystery and ARG focusing on immersiveness and storytelling. [and, Of course good art!]
+        <div class="faqNode">
+            <button class="faqToggle" type="button" aria-expanded="false">
+                <img src="https://cdn.hackclub.com/019d155f-c68f-70bb-bfd9-047b7a7224bb/closed%20eye.png" alt="Q2 toggle">
+            </button>
+            <div class="faqLabel">What is the theme?</div>
+            <div class="faqDrop">
+                <div class="faqQuestion"></div>
+                <div class="faqAnswer">
+                    Horror, mystery and ARG focusing on immersiveness and storytelling. [and, of course, good art!]
+                </div>
             </div>
         </div>
 
-        <div class="faq">
-            Q3: What kind of projects are to be submitted?
-            <div class="answer">
-                Projects can be:
-                <br>• A website
-                <br>• A terminal / CLI program
-                <br>• A game
-                <br>• A mod (eg. Minecraft)
-                <br> basically, anything that can be spooky EXCEPT hardware. This event is entirely software!
+        <div class="faqNode">
+            <button class="faqToggle" type="button" aria-expanded="false">
+                <img src="https://cdn.hackclub.com/019d155f-c68f-70bb-bfd9-047b7a7224bb/closed%20eye.png" alt="Q3 toggle">
+            </button>
+            <div class="faqLabel">What kind of projects are to be submitted?</div>
+            <div class="faqDrop">
+                <div class="faqQuestion">Projects can be:</div>
+                <div class="faqAnswer">
+                    <br>• A website
+                    <br>• A terminal / CLI program
+                    <br>• A game
+                    <br>• A mod (eg. Minecraft)
+                    <br>Basically, anything that can be spooky.
+                    <br>This event is entirely software!
+                </div>
             </div>
         </div>
 
-        <div class="faq">
-            Q4: How do I track time?
-            <div class="answer">
-                Use <a href="https://hackatime.hackclub.com" target="_blank" rel="noreferrer">Hackatime</a>.
+        <div class="faqNode">
+            <button class="faqToggle" type="button" aria-expanded="false">
+                <img src="https://cdn.hackclub.com/019d155f-c68f-70bb-bfd9-047b7a7224bb/closed%20eye.png" alt="Q4 toggle">
+            </button>
+            <div class="faqLabel">How do I track time?</div>
+            <div class="faqDrop">
+                <div class="faqQuestion"></div>
+                <div class="faqAnswer">
+                    Use <a href="https://hackatime.hackclub.com" target="_blank" rel="noreferrer">Hackatime</a>. HackClub's own time-tracking tool!
+                </div>
             </div>
         </div>
 
-        <div class="faq">
-            Q5: What does the shop have?
-            <div class="answer">
-                custom merch and stickers along with high hacker value items!
+        <div class="faqNode">
+            <button class="faqToggle" type="button" aria-expanded="false">
+                <img src="https://cdn.hackclub.com/019d155f-c68f-70bb-bfd9-047b7a7224bb/closed%20eye.png" alt="Q5 toggle">
+            </button>
+            <div class="faqLabel">What does the shop have?</div>
+            <div class="faqDrop">
+                <div class="faqQuestion"></div>
+                <div class="faqAnswer">
+                    Custom merch and stickers along with high hacker value items! Recommendations would be appreciated in the <a href="https://app.slack.com/client/E09V59WQY1E/C0ANG7F1E9E" target="_blank" rel="noreferrer">#1zone-out channel!</a>
+                    <br>PS: I'll have a full list of items up soon in this page!
+                </div>
             </div>
         </div>
 
-        <div class="faq">
-            Q6: Who made this?
-            <div class="answer">
-                Website by Kuzu. Used the FNAF main menu for inspiration to fit the "game" vibe. HackClub will be helping me host this.
+        <div class="faqNode">
+            <button class="faqToggle" type="button" aria-expanded="false">
+                <img src="https://cdn.hackclub.com/019d155f-c68f-70bb-bfd9-047b7a7224bb/closed%20eye.png" alt="Q6 toggle">
+            </button>
+            <div class="faqLabel">Who made this?</div>
+            <div class="faqDrop">
+                <div class="faqQuestion"></div>
+                <div class="faqAnswer">
+                    Website by <a href="https://hackclub.enterprise.slack.com/team/U08GCDHM0QZ" target="_blank" rel="noreferrer">Kuzu!</a>. Used the FNAF main menu for inspiration to fit the "game" vibe. Hack Club will be helping me host this.
+                </div>
             </div>
         </div>
 
-        <div class="faq">
-            Q7: How do I RSVP?
-            <div class="answer">
-                <a href="https://forms.fillout.com/t/fuxhBdNbhdus" target="_blank" rel="noreferrer">Click here to RSVP</a>
+        <div class="faqNode">
+            <button class="faqToggle" type="button" aria-expanded="false">
+                <img src="https://cdn.hackclub.com/019d155f-c68f-70bb-bfd9-047b7a7224bb/closed%20eye.png" alt="Q7 toggle">
+            </button>
+            <div class="faqLabel">How do I RSVP?</div>
+            <div class="faqDrop">
+                <div class="faqQuestion"></div>
+                <div class="faqAnswer">
+                    <a href="https://forms.fillout.com/t/fuxhBdNbhdus" target="_blank" rel="noreferrer">Click here to RSVP</a>
+                </div>
             </div>
         </div>
 
-        <div class="faq">
-            Q8: Why?
-            <div class="answer">
-             Because ZONE OUT. [PS: IF YOULIKE THIS STUFF, PLEASE RSVP AND PARTICIPATE!!!!]
+        <div class="faqNode">
+            <button class="faqToggle" type="button" aria-expanded="false">
+                <img src="https://cdn.hackclub.com/019d155f-c68f-70bb-bfd9-047b7a7224bb/closed%20eye.png" alt="Q8 toggle">
+            </button>
+            <div class="faqLabel">
+                <span class="glitchText" data-text="ZoneOut">ZoneOut</span>
+            </div>
+            <div class="faqDrop">
+                <div class="faqQuestion"></div>
+                <div class="faqAnswer">
+                    .........................................
+                </div>
             </div>
         </div>
+
     </div>
 </div>
+
 <script src="script.js"></script>
 </body>
 </html>
