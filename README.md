@@ -1,4 +1,5 @@
 ## ZoneOut
+- Make adrenalin inducing projects, win great prizes!
 
 **ZoneOut** is a Hack Club YSWS built for spooky software projects, ARG vibes, mysterious and thrilling weird creative ideas. Give people a great adrenaline rush, get back prizes!
 
