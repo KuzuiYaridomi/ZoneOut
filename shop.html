@@ -1,812 +1,322 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>ZoneOut Shop</title>
+<meta charset="UTF-8">
+<title>ZoneOut Exchange</title>
+
 <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Courier New", monospace;
-}
-
-:root {
-    --bg: #000;
-    --panel: rgba(22, 22, 22, 0.86);
-    --panel-strong: rgba(30, 30, 30, 0.92);
-    --line: rgba(255, 255, 255, 0.08);
-    --text: #fff;
-    --muted: rgba(255, 255, 255, 0.62);
-    --accent: rgba(160, 110, 255, 0.35);
-}
-
-body {
-    min-height: 100vh;
-    background: var(--bg);
-    color: var(--text);
-    overflow-x: hidden;
-}
-
-body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background:
-        radial-gradient(circle at top, rgba(70, 0, 120, 0.18), rgba(0, 0, 0, 0.95)),
-        linear-gradient(to bottom, rgba(255,255,255,0.02), transparent 30%, rgba(255,255,255,0.01));
-    pointer-events: none;
-    z-index: -2;
-}
-
-/* background video */
-.videoBG {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: -3;
-    filter: brightness(0.22) contrast(1.18) saturate(0.85);
-    pointer-events: none;
-}
-
-.overlay {
-    position: fixed;
-    inset: 0;
-    background: radial-gradient(circle at top, rgba(70,0,120,0.26), rgba(0,0,0,0.92));
-    z-index: -1;
-    pointer-events: none;
-}
-
-/* top elements */
-.shopTitle {
-    text-align: center;
-    font-size: clamp(28px, 4vw, 44px);
-    letter-spacing: 6px;
-    margin: 34px 16px 18px;
-    text-shadow: 0 0 12px rgba(255, 255, 255, 0.08);
-}
-
-.balanceBox {
-    position: fixed;
-    top: 18px;
-    right: 18px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 14px;
-    border-radius: 14px;
-    background: rgba(20, 20, 20, 0.72);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    z-index: 20;
-    cursor: default;
-    user-select: none;
-}
-
-.balanceBox:hover::after {
-    content: "sus-coin balance";
-    position: absolute;
-    top: 48px;
-    right: 0;
-    padding: 4px 8px;
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    background: black;
-    font-size: 12px;
-    white-space: nowrap;
-}
-
-.balanceSymbol {
-    font-size: 20px;
-}
-
-.balanceAmount {
-    font-size: 18px;
-    min-width: 22px;
-    text-align: left;
-}
-
-/* layout */
-.shopWrap {
-    width: min(1240px, calc(100% - 32px));
-    margin: 22px auto 70px;
-}
-
-.sectionTitle {
-    margin: 30px 4px 14px;
-    font-size: 28px;
-    letter-spacing: 4px;
-    opacity: 0.92;
-}
-
-.sectionTitle.glitchText {
-    position: relative;
-    display: inline-block;
-}
-
-.sectionTitle.glitchText::before,
-.sectionTitle.glitchText::after {
-    content: attr(data-text);
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    overflow: hidden;
-    opacity: 0.8;
-    pointer-events: none;
-}
-
-.sectionTitle.glitchText::before {
-    color: rgba(255, 70, 70, 0.9);
-    transform: translateX(-2px);
-    clip-path: inset(0 0 50% 0);
-    animation: titleGlitch 2.8s infinite;
-}
-
-.sectionTitle.glitchText::after {
-    color: rgba(0, 255, 255, 0.9);
-    transform: translateX(2px);
-    clip-path: inset(50% 0 0 0);
-    animation: titleGlitch2 2.8s infinite;
-}
-
-@keyframes titleGlitch {
-    0%, 88%, 100% { transform: translateX(-2px); opacity: 0.0; }
-    89% { opacity: 1; }
-    90% { transform: translateX(-5px); opacity: 0.85; }
-    91% { transform: translateX(3px); opacity: 0.45; }
-    92% { transform: translateX(-1px); opacity: 0.65; }
-}
-
-@keyframes titleGlitch2 {
-    0%, 88%, 100% { transform: translateX(2px); opacity: 0.0; }
-    89% { opacity: 1; }
-    90% { transform: translateX(5px); opacity: 0.85; }
-    91% { transform: translateX(-3px); opacity: 0.45; }
-    92% { transform: translateX(1px); opacity: 0.65; }
-}
-
-.shopGrid {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 18px;
-}
 
-.itemCard {
-    position: relative;
-    padding: 18px 14px 14px;
-    min-height: 240px;
-    border-radius: 18px;
-    background: var(--panel);
-    border: 1px solid var(--line);
-    text-align: center;
-    overflow: hidden;
-    cursor: pointer;
-    user-select: none;
-    transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease, filter .16s ease;
-    animation: subtleFloat 6s ease-in-out infinite;
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:"Courier New",monospace;
 }
 
-.itemCard:hover {
-    transform: translateY(-2px) scale(1.01);
-    border-color: rgba(255, 255, 255, 0.16);
-    box-shadow: 0 0 0 1px rgba(255,255,255,0.02), 0 14px 40px rgba(0,0,0,0.25);
+body{
+background:black;
+color:white;
+overflow-x:hidden;
 }
 
-/* hover glint */
-.itemCard::before {
-    content: "";
-    position: absolute;
-    top: -30%;
-    left: -120%;
-    width: 50%;
-    height: 160%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
-    transform: rotate(18deg);
-    opacity: 0;
-    pointer-events: none;
-}
 
-.itemCard:hover::before {
-    opacity: 1;
-    animation: glint 0.75s ease;
+.videoBG{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+object-fit:cover;
+z-index:-2;
+filter:brightness(0.25) contrast(1.2);
 }
 
-@keyframes glint {
-    0% { left: -120%; }
-    100% { left: 180%; }
-}
 
-.itemCard::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: repeating-linear-gradient(
-        to bottom,
-        transparent 0px,
-        transparent 12px,
-        rgba(255,255,255,0.035) 13px,
-        transparent 15px
-    );
-    opacity: 0.15;
-    pointer-events: none;
+.overlay{
+position:fixed;
+inset:0;
+background:radial-gradient(circle at top,rgba(70,0,120,0.3),black 70%);
+z-index:-1;
 }
 
-/* higher-quality bigger images */
-.itemImage {
-    width: 128px;
-    height: 128px;
-    object-fit: contain;
-    display: block;
-    margin: 6px auto 12px;
-    filter: drop-shadow(0 0 10px rgba(255,255,255,0.12));
+.shopTitle{
+text-align:center;
+font-size:42px;
+letter-spacing:6px;
+margin-top:40px;
 }
 
-.itemName {
-    font-size: 15px;
-    line-height: 1.25;
-    margin-bottom: 7px;
+.shopSubtitle{
+    text-align:left;
+    font-size:20px;
+    margin-top:10px;
 }
 
-.itemHours {
-    font-size: 13px;
-    color: var(--muted);
-}
+/* katzu currency balacne box*/
 
-/* secret section */
-.secretSection {
-    margin-top: 86px;
-    text-align: center;
+.balanceBox{
+position:fixed;
+top:20px;
+right:20px;
+display:flex;
+align-items:center;
+gap:8px;
+padding:10px 16px;
+background:rgba(15,15,15,0.85);
+border:1px solid rgba(255,255,255,0.2);
+border-radius:6px;
 }
 
-.secretGrid {
-    margin-top: 18px;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 18px;
-    max-width: 620px;
-    margin-left: auto;
-    margin-right: auto;
+.balanceBox:hover::after{
+content:"katzu currency balance";
+position:absolute;
+top:45px;
+right:0;
+background:black;
+border:1px solid rgba(255,255,255,0.2);
+padding:4px 8px;
+font-size:12px;
 }
 
-.secretRowLabel {
-    margin-top: 10px;
-    font-size: 12px;
-    opacity: 0.55;
-    letter-spacing: 1px;
-}
+/* Ggrid */
 
-/* random glitch for cards */
-.itemCard.randomGlitch {
-    animation: cardJitter 0.35s steps(2, end) 1;
+.shopGrid{
+width:1100px;
+margin:50px auto;
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:20px;
 }
 
-.itemCard.randomGlitch::before,
-.itemCard.randomGlitch::after {
-    opacity: 1;
+.itemCard{
+position:relative;
+padding:18px;
+background:rgba(25,25,25,0.85);
+border:1px solid rgba(255,255,255,0.05);
+border-radius:10px;
+text-align:center;
+overflow:hidden;
 }
 
-.itemCard.randomGlitch::before {
-    background: rgba(255, 0, 90, 0.22);
-    animation: layerShift1 0.35s steps(2, end) 1;
+.itemCard.glitch{
+animation:glitchMove 4s infinite;
 }
 
-.itemCard.randomGlitch::after {
-    background: rgba(0, 255, 255, 0.22);
-    animation: layerShift2 0.35s steps(2, end) 1;
+.itemCard.glitch::before,
+.itemCard.glitch::after{
+content:"";
+position:absolute;
+inset:0;
+mix-blend-mode:screen;
+pointer-events:none;
 }
 
-@keyframes cardJitter {
-    0% { transform: translate(0, 0) rotate(0deg); filter: hue-rotate(0deg); }
-    20% { transform: translate(-2px, 1px) rotate(-0.3deg); filter: hue-rotate(18deg); }
-    40% { transform: translate(3px, -1px) rotate(0.3deg); filter: hue-rotate(-22deg); }
-    60% { transform: translate(-3px, 2px) rotate(-0.2deg); filter: hue-rotate(8deg); }
-    80% { transform: translate(2px, -2px) rotate(0.2deg); filter: hue-rotate(-12deg); }
-    100% { transform: translate(0, 0) rotate(0deg); filter: hue-rotate(0deg); }
+.itemCard.glitch::before{
+background:rgba(255,0,0,0.2);
+animation:glitchRed 4s infinite;
 }
 
-@keyframes layerShift1 {
-    0% { transform: translate(0,0); opacity: 0; }
-    40% { transform: translate(-4px, 0); opacity: 0.5; }
-    70% { transform: translate(2px, 0); opacity: 0.35; }
-    100% { transform: translate(0,0); opacity: 0; }
+.itemCard.glitch::after{
+background:rgba(0,255,255,0.2);
+animation:glitchBlue 4s infinite;
 }
 
-@keyframes layerShift2 {
-    0% { transform: translate(0,0); opacity: 0; }
-    40% { transform: translate(4px, 0); opacity: 0.45; }
-    70% { transform: translate(-2px, 0); opacity: 0.3; }
-    100% { transform: translate(0,0); opacity: 0; }
-}
+/* GLITCH ANIMATIONS */
 
-@keyframes subtleFloat {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-4px); }
+@keyframes glitchMove{
+0%,95%,100%{
+transform:translate(0);
 }
-
-/* violent special item effects */
-.specialShake {
-    animation: violentShake 0.45s linear 1;
+96%{
+transform:translate(-2px,1px);
 }
-
-@keyframes violentShake {
-    0% { transform: translate(0,0) rotate(0); }
-    10% { transform: translate(-10px, 4px) rotate(-2deg); }
-    20% { transform: translate(12px, -8px) rotate(2deg); }
-    30% { transform: translate(-14px, 7px) rotate(-1deg); }
-    40% { transform: translate(16px, -10px) rotate(3deg); }
-    50% { transform: translate(-16px, 12px) rotate(-3deg); }
-    60% { transform: translate(14px, -6px) rotate(2deg); }
-    70% { transform: translate(-8px, 5px) rotate(-1deg); }
-    80% { transform: translate(6px, -4px) rotate(1deg); }
-    90% { transform: translate(-3px, 2px) rotate(0deg); }
-    100% { transform: translate(0,0) rotate(0); }
+97%{
+transform:translate(3px,-1px);
 }
-
-.flashBang {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    background: rgba(255,255,255,0.06);
-    opacity: 0;
-    z-index: 140;
+98%{
+transform:translate(-3px,2px);
 }
-
-.flashBang.active {
-    animation: flashPulse 0.25s ease;
+99%{
+transform:translate(2px,-2px);
 }
-
-@keyframes flashPulse {
-    0% { opacity: 0; }
-    20% { opacity: 0.28; }
-    100% { opacity: 0; }
 }
 
-/* modal */
-.modalOverlay {
-    position: fixed;
-    inset: 0;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    background: rgba(0, 0, 0, 0.45);
-    backdrop-filter: blur(14px) saturate(130%);
-    -webkit-backdrop-filter: blur(14px) saturate(130%);
-    z-index: 200;
-}
 
-.modalOverlay.active {
-    display: flex;
+@keyframes glitchRed{
+0%,95%,100%{
+transform:translate(0);
+opacity:0;
 }
-
-.modalCard {
-    width: min(980px, 96vw);
-    min-height: 420px;
-    border-radius: 26px;
-    border: 1px solid rgba(255,255,255,0.14);
-    background: rgba(24,24,24,0.42);
-    box-shadow: 0 24px 80px rgba(0,0,0,0.55);
-    overflow: hidden;
-    display: grid;
-    grid-template-columns: 360px 1fr;
+97%{
+transform:translate(-3px,0);
+opacity:0.4;
 }
-
-.modalLeft {
-    padding: 26px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(12,12,12,0.28);
-    border-right: 1px solid rgba(255,255,255,0.08);
 }
 
-.modalImage {
-    width: 100%;
-    height: 100%;
-    max-height: 320px;
-    object-fit: contain;
-    filter: drop-shadow(0 0 10px rgba(255,255,255,0.15));
+@keyframes glitchBlue{
+0%,95%,100%{
+transform:translate(0);
+opacity:0;
 }
-
-.modalRight {
-    padding: 28px 28px 24px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+98%{
+transform:translate(3px,0);
+opacity:0.4;
 }
-
-.modalName {
-    font-size: 30px;
-    letter-spacing: 1px;
-    margin-bottom: 14px;
 }
 
-.modalQuote {
-    font-size: 18px;
-    line-height: 1.6;
-    color: rgba(255,255,255,0.82);
-    margin-bottom: 16px;
-}
 
-.modalCost {
-    font-size: 16px;
-    color: rgba(255,255,255,0.72);
-    margin-bottom: 22px;
+.itemImage{
+width:90px;
+height:90px;
+object-fit:contain;
+margin:auto;
+display:block;
 }
 
-.modalActions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    align-items: center;
+.itemName{
+margin-top:10px;
+font-size:15px;
 }
 
-.modalButton {
-    border: 1px solid rgba(255,255,255,0.14);
-    padding: 12px 16px;
-    border-radius: 12px;
-    background: rgba(255,255,255,0.07);
-    color: white;
-    font-family: "Courier New", monospace;
-    font-size: 16px;
-    cursor: pointer;
-    transition: transform .15s ease, opacity .15s ease, background .15s ease;
+.itemHours{
+font-size:13px;
+color:gray;
+margin-top:3px;
 }
 
-.modalButton:hover {
-    transform: translateY(-1px);
+.secretSection{
+margin-top:90px;
+text-align:center;
 }
-
-.modalButton:disabled {
-    opacity: 0.38;
-    cursor: not-allowed;
-    transform: none;
+.secretTitle{
+font-size:28px;
+letter-spacing:6px;
+animation:glitchText 2s infinite;
 }
 
-.buyButton {
-    background: rgba(160, 110, 255, 0.18);
+@keyframes glitchText{
+0%,90%,100%{
+text-shadow:0 0 0 white;
 }
-
-.closeButton {
-    background: rgba(255,255,255,0.06);
+92%{
+text-shadow:-3px 0 red,3px 0 cyan;
 }
-
-.balanceNotice {
-    margin-top: 16px;
-    font-size: 13px;
-    color: rgba(255,255,255,0.58);
-    min-height: 18px;
+94%{
+text-shadow:3px 0 red,-3px 0 cyan;
 }
-
-/* responsive */
-@media (max-width: 1100px) {
-    .shopGrid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .modalCard {
-        grid-template-columns: 300px 1fr;
-    }
 }
 
-@media (max-width: 860px) {
-    .shopGrid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .modalCard {
-        grid-template-columns: 1fr;
-    }
-
-    .modalLeft {
-        border-right: none;
-        border-bottom: 1px solid rgba(255,255,255,0.08);
-    }
+.secretGrid{
+width:500px;
+margin:40px auto;
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:20px;
 }
 
-@media (max-width: 520px) {
-    .shopGrid,
-    .secretGrid {
-        grid-template-columns: 1fr;
-    }
-
-    .balanceBox {
-        top: 10px;
-        right: 10px;
-    }
-}
 </style>
 </head>
 <body>
+<link rel="stylesheet" href="style.css">
 
-<video autoplay muted loop class="videoBG" playsinline>
-    <source src="VIDEO_LINK" type="video/mp4">
+<video autoplay muted loop class="videoBG">
+<source src="https://cdn.hackclub.com/019d1552-4f0e-7cc9-8b0c-86d538cd897e/glitcheffect.mp4" type="video/mp4">
 </video>
+
 <div class="overlay"></div>
 
-<div class="shopTitle">ZONEOUT EXCHANGE</div>
-
-<div class="balanceBox" title="sus-coin balance">
-    <span class="balanceSymbol">☯</span>
-    <span class="balanceAmount" id="balanceAmount">0</span>
+<div class="shopTitle">
+    <span class="glitchText" data-text="ZoneOut Exchange">ZoneOut Exchange</span>
 </div>
 
-<div class="shopWrap">
-    <div class="shopGrid">
-
-        <div class="itemCard glitchable" data-name="Stickers" data-quote="stickers for good." data-hours="2 hours" data-cost="2" data-image="IMAGE_LINK" data-secret="false">
-            <img class="itemImage" src="IMAGE_LINK" alt="Stickers">
-            <div class="itemName">Stickers</div>
-            <div class="itemHours">2 hours</div>
-        </div>
-
-        <div class="itemCard glitchable" data-name="Merch" data-quote="wear the signal." data-hours="7 hours" data-cost="7" data-image="IMAGE_LINK" data-secret="false">
-            <img class="itemImage" src="IMAGE_LINK" alt="Merch">
-            <div class="itemName">Merch</div>
-            <div class="itemHours">7 hours</div>
-        </div>
-
-        <div class="itemCard glitchable" data-name="Movie Grants" data-quote="a night out, but strange." data-hours="2-5 hours" data-cost="5" data-image="IMAGE_LINK" data-secret="false">
-            <img class="itemImage" src="IMAGE_LINK" alt="Movie Grants">
-            <div class="itemName">Movie Grants</div>
-            <div class="itemHours">2-5 hours</div>
-        </div>
-
-        <div class="itemCard glitchable" data-name="Steam Grant [Developer]" data-quote="for the builders behind the curtain." data-hours="12 hours" data-cost="12" data-image="IMAGE_LINK" data-secret="false">
-            <img class="itemImage" src="IMAGE_LINK" alt="Steam Developer Grant">
-            <div class="itemName">Steam Grant [Developer]</div>
-            <div class="itemHours">12 hours</div>
-        </div>
-
-        <div class="itemCard glitchable" data-name="Steam Game Grant" data-quote="for a bigger ritual." data-hours="2-12 hours" data-cost="12" data-image="IMAGE_LINK" data-secret="false">
-            <img class="itemImage" src="IMAGE_LINK" alt="Steam Game Grant">
-            <div class="itemName">Steam Game Grant</div>
-            <div class="itemHours">2-12 hours</div>
-        </div>
-
-        <div class="itemCard glitchable" data-name="Peripheral Grants" data-quote="tools for the machine." data-hours="30-100 hours" data-cost="100" data-image="IMAGE_LINK" data-secret="false">
-            <img class="itemImage" src="IMAGE_LINK" alt="Peripheral Grants">
-            <div class="itemName">Peripheral Grants</div>
-            <div class="itemHours">30-100 hours</div>
-        </div>
-
-        <div class="itemCard glitchable" data-name="500$ Laptop Grant" data-quote="a portable gateway." data-hours="145 hours" data-cost="145" data-image="IMAGE_LINK" data-secret="false">
-            <img class="itemImage" src="IMAGE_LINK" alt="500 dollar Laptop Grant">
-            <div class="itemName">500$ Laptop Grant</div>
-            <div class="itemHours">145 hours</div>
-        </div>
-
-        <div class="itemCard glitchable" data-name="VR Headset" data-quote="step into the static." data-hours="100 hours" data-cost="100" data-image="IMAGE_LINK" data-secret="false">
-            <img class="itemImage" src="IMAGE_LINK" alt="VR Headset">
-            <div class="itemName">VR Headset</div>
-            <div class="itemHours">100 hours</div>
-        </div>
-
-        <div class="itemCard glitchable" data-name="Walkie Talkie / Radio Transmitter" data-quote="hear the noise between channels." data-hours="10-30 hours" data-cost="30" data-image="IMAGE_LINK" data-secret="false">
-            <img class="itemImage" src="IMAGE_LINK" alt="Walkie Talkie Radio Transmitter">
-            <div class="itemName">Walkie Talkie / Radio Transmitter</div>
-            <div class="itemHours">10-30 hours</div>
-        </div>
-
-        <div class="itemCard glitchable" data-name="Ceiling Plush" data-quote="something soft is watching." data-hours="8 hours" data-cost="8" data-image="IMAGE_LINK" data-secret="false">
-            <img class="itemImage" src="IMAGE_LINK" alt="Ceiling Plush">
-            <div class="itemName">Ceiling Plush</div>
-            <div class="itemHours">8 hours</div>
-        </div>
-
-    </div>
-
-    <div class="secretSection">
-        <div class="sectionTitle glitchText" data-text="???">???</div>
-        <div class="secretGrid">
-
-            <div class="itemCard glitchable secretItem" data-name="Secret USB Drive" data-quote="access requires memory." data-hours="???" data-cost="9999" data-image="IMAGE_LINK" data-secret="true">
-                <img class="itemImage" src="IMAGE_LINK" alt="Secret USB Drive">
-                <div class="itemName">Secret USB Drive</div>
-                <div class="itemHours">???</div>
-            </div>
-
-            <div class="itemCard glitchable secretItem" data-name="Random Envelope" data-quote="it is sealed for a reason." data-hours="???" data-cost="9999" data-image="IMAGE_LINK" data-secret="true">
-                <img class="itemImage" src="IMAGE_LINK" alt="Random Envelope">
-                <div class="itemName">Random Envelope</div>
-                <div class="itemHours">???</div>
-            </div>
-
-        </div>
-        <div class="secretRowLabel">requires achievement</div>
-    </div>
+<div class="balanceBox">
+<span>☯</span>
+<span>0</span>
 </div>
 
-<div class="flashBang" id="flashBang"></div>
 
-<div class="modalOverlay" id="modalOverlay" aria-hidden="true">
-    <div class="modalCard" role="dialog" aria-modal="true" aria-labelledby="modalName">
-        <div class="modalLeft">
-            <img class="modalImage" id="modalImage" src="" alt="">
-        </div>
-        <div class="modalRight">
-            <div class="modalName" id="modalName">Item</div>
-            <div class="modalQuote" id="modalQuote"></div>
-            <div class="modalCost" id="modalCost"></div>
-            <div class="modalActions">
-                <button class="modalButton buyButton" id="buyButton" type="button">Spend sus-coins</button>
-                <button class="modalButton closeButton" id="closeButton" type="button">Close</button>
-            </div>
-            <div class="balanceNotice" id="balanceNotice"></div>
-        </div>
-    </div>
+<div class="shopGrid">
+<div class="itemCard glitch">
+<img class="itemImage" src="https://cdn.hackclub.com/019d1fe2-db71-782b-b9d0-60423696377d/pile_of_stickers.png">
+<div class="itemName">Stickers</div>
+<div class="itemHours">2 hours</div>
 </div>
 
-<script>
-const balanceAmount = document.getElementById("balanceAmount");
-const modalOverlay = document.getElementById("modalOverlay");
-const modalImage = document.getElementById("modalImage");
-const modalName = document.getElementById("modalName");
-const modalQuote = document.getElementById("modalQuote");
-const modalCost = document.getElementById("modalCost");
-const buyButton = document.getElementById("buyButton");
-const closeButton = document.getElementById("closeButton");
-const balanceNotice = document.getElementById("balanceNotice");
-const flashBang = document.getElementById("flashBang");
+<div class="itemCard glitch">
+<img class="itemImage" src="https://cdn.hackclub.com/019d2022-bcc0-7c96-bd2d-ad90363804d4/moviegrant.png">
+<div class="itemName">Movie Grants</div>
+<div class="itemHours">2-5 hours</div>
+</div>
 
-let susCoins = 0;
-let activeCard = null;
-let currentCost = 0;
-let currentSecret = false;
-let glitchTimers = [];
+<div class="itemCard glitch">
+<img class="itemImage" src="https://cdn.hackclub.com/019d2026-d504-716f-b59f-5893c78ec71d/yuki-chan-removebg-preview.png">
+<div class="itemName">Ceiling Plush</div>
+<div class="itemHours">8 hours</div>
+</div>
 
-function setBalance(value) {
-    susCoins = Math.max(0, value);
-    balanceAmount.textContent = susCoins;
-}
+<div class="itemCard glitch">
+<img class="itemImage" src="https://cdn.hackclub.com/019d203e-93cc-74d1-988a-ac2b90cf73ca/qm.png">
+<div class="itemName">Merch</div>
+<div class="itemHours">10 hours</div>
+</div>
 
-function coinsLabel(cost) {
-    return `${cost} ~ ${cost} sus-coins`;
-}
+<div class="itemCard glitch">
+<img class="itemImage" src="https://cdn.hackclub.com/019d2025-f118-7993-b534-8c3c129d92f6/steam.png">
+<div class="itemName">Steam Game Grant</div>
+<div class="itemHours">2-12 hours</div>
+</div>
 
-function showModal(card) {
-    activeCard = card;
-    currentSecret = card.dataset.secret === "true";
-    currentCost = Number(card.dataset.cost || 0);
+<div class="itemCard glitch">
+<img class="itemImage" src="https://cdn.hackclub.com/019d2025-f118-7993-b534-8c3c129d92f6/steam.png">
+<div class="itemName">Steam Developer Grant</div>
+<div class="itemHours">15 hours</div>
+</div>
 
-    modalImage.src = card.dataset.image;
-    modalImage.alt = card.dataset.name;
-    modalName.textContent = card.dataset.name;
-    modalQuote.textContent = card.dataset.quote || "";
-    modalCost.textContent = `${card.dataset.hours} ~ ${coinsLabel(currentCost)}`;
-    balanceNotice.textContent = "";
+<div class="itemCard glitch">
+<img class="itemImage" src="https://cdn.hackclub.com/019d2029-f5eb-7652-bc51-ac52213b3097/walkietalkie.png">
+<div class="itemName">Walkie Talkie</div>
+<div class="itemHours">10-30 hours</div>
+</div>
 
-    const canBuy = susCoins >= currentCost;
-    buyButton.disabled = !canBuy;
-    buyButton.textContent = currentSecret ? "Locked" : (canBuy ? `Spend ${currentCost} ☯` : `Need ${currentCost - susCoins} more ☯`);
+<div class="itemCard glitch">
+<img class="itemImage" src="https://cdn.hackclub.com/019d202f-1142-7f3e-9851-d3c3b0ce00ad/perpherals.png">
+<div class="itemName">Computer Peripheral Grants</div>
+<div class="itemHours">30-100 hours</div>
+</div>
 
-    modalOverlay.classList.add("active");
-    modalOverlay.setAttribute("aria-hidden", "false");
-}
+<div class="itemCard glitch">
+<img class="itemImage" src="https://cdn.hackclub.com/019d2036-a6dd-72b3-ac72-e89c0ddda68a/quest.png">
+<div class="itemName">VR Headset</div>
+<div class="itemHours">140 hours</div>
+</div>
 
-function hideModal() {
-    modalOverlay.classList.remove("active");
-    modalOverlay.setAttribute("aria-hidden", "true");
-    activeCard = null;
-}
+<div class="itemCard glitch">
+<img class="itemImage" src="https://cdn.hackclub.com/019d2030-d829-7af1-bf86-6ada946bdf83/laptopg.png">
+<div class="itemName">$500 Laptop Grant</div>
+<div class="itemHours">160 hours</div>
+</div>
+</div>
 
-function randomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
 
-function triggerSecretEffect(card) {
-    card.classList.remove("specialShake");
-    void card.offsetWidth;
-    card.classList.add("specialShake");
+<div class="secretSection">
+<div class="secretTitle">???</div>
+<div class="secretGrid">
+<div class="itemCard glitch">
+<img class="itemImage" src="https://cdn.hackclub.com/019d2033-5e1f-736a-83c2-364bdbf1c387/_usb.png">
+<div class="itemName">Secret USB Drive</div>
+<div class="itemHours">???</div>
+</div>
 
-    flashBang.classList.remove("active");
-    void flashBang.offsetWidth;
-    flashBang.classList.add("active");
+<div class="itemCard glitch">
+<img class="itemImage" src="https://cdn.hackclub.com/019d2023-6f4c-73ae-bd84-72fa06a09ce1/envolope.png">
+<div class="itemName">Random Envelope</div>
+<div class="itemHours">???</div>
+</div>
+</div>
+</div>
 
-    setTimeout(() => {
-        flashBang.classList.remove("active");
-    }, 260);
-
-    card.style.filter = `hue-rotate(${randomInt(-25, 25)}deg) saturate(${randomInt(140, 220)}%)`;
-    setTimeout(() => {
-        card.style.filter = "";
-    }, 450);
-
-    const rect = card.getBoundingClientRect();
-    const x = rect.left + rect.width / 2 + randomInt(-60, 60);
-    const y = rect.top + rect.height / 2 + randomInt(-60, 60);
-
-    // Real cursor movement is blocked by browsers; this at least creates a sudden jumpy visual moment.
-    document.documentElement.style.scrollBehavior = "auto";
-    window.scrollTo({
-        left: Math.max(0, window.scrollX + randomInt(-20, 20)),
-        top: Math.max(0, window.scrollY + randomInt(-20, 20)),
-        behavior: "auto"
-    });
-
-    const cursorHint = document.body;
-    cursorHint.animate([
-        { transform: "translate(0,0)" },
-        { transform: `translate(${randomInt(-4,4)}px, ${randomInt(-4,4)}px)` },
-        { transform: `translate(${randomInt(-2,2)}px, ${randomInt(-2,2)}px)` },
-        { transform: "translate(0,0)" }
-    ], { duration: 450, easing: "steps(2, end)" });
-}
-
-function scheduleGlitch(card) {
-    const run = () => {
-        const wait = randomInt(2500, 9500);
-        const t = setTimeout(() => {
-            const hue = randomInt(0, 360);
-            card.style.setProperty("--glitch-hue", hue);
-
-            card.classList.add("randomGlitch");
-            card.style.borderColor = `hsla(${hue}, 100%, 70%, 0.35)`;
-            card.style.boxShadow = `0 0 0 1px rgba(255,255,255,0.02), 0 0 24px hsla(${hue}, 100%, 65%, 0.12)`;
-
-            setTimeout(() => {
-                card.classList.remove("randomGlitch");
-                card.style.borderColor = "";
-                card.style.boxShadow = "";
-                run();
-            }, 380);
-        }, wait);
-
-        glitchTimers.push(t);
-    };
-
-    run();
-}
-
-document.querySelectorAll(".glitchable").forEach(card => {
-    card.addEventListener("click", () => {
-        if (card.classList.contains("secretItem")) {
-            triggerSecretEffect(card);
-            return;
-        }
-        showModal(card);
-    });
-
-    card.addEventListener("mouseenter", () => {
-        card.style.setProperty("--hover", "1");
-    });
-
-    scheduleGlitch(card);
-});
-
-buyButton.addEventListener("click", () => {
-    if (!activeCard) return;
-
-    if (susCoins < currentCost) {
-        balanceNotice.textContent = "Not enough sus-coins yet.";
-        return;
-    }
-
-    setBalance(susCoins - currentCost);
-    balanceNotice.textContent = "Purchase complete. Sus-coins deducted.";
-    buyButton.disabled = true;
-    buyButton.textContent = `Spent ${currentCost} ☯`;
-});
-
-closeButton.addEventListener("click", hideModal);
-
-modalOverlay.addEventListener("click", (e) => {
-    if (e.target === modalOverlay) hideModal();
-});
-
-document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && modalOverlay.classList.contains("active")) {
-        hideModal();
-    }
-});
-
-/* simple test helper; remove later if you want backend-only balance */
-setBalance(0);
-</script>
+<div class="shopSubtitle">
+    more REALLY COOL items planned to arrive soon!... just you wait :p
+</div>
 </body>
 </html>
