@@ -14,14 +14,14 @@ const warningProceed = document.getElementById("warningProceed");
 const warningQuit = document.getElementById("warningQuit");
 const volumeSlider = document.getElementById("masterVolume");
 const volumeValue = document.getElementById("volumeValue");
-
 const loadingScreen = document.getElementById("loadingScreen");
 const loadingText = document.getElementById("loadingText");
 const learnPage = document.getElementById("learnPage");
-
 const menuAudio = document.getElementById("bgAudio");
 const faqAudio = document.getElementById("faqAudio");
-
+const foldRSVP = document.getElementById("foldRSVP");
+const foldLearn = document.getElementById("foldLearn");
+const viewerWarning = document.getElementById("viewerWarning");
 let loadingTimer = null;
 let loadingDotsTimer = null;
 let masterVolume = Number(volumeSlider.value) / 100;
@@ -31,8 +31,7 @@ function syncVolumeDisplay() {
 }
 
 function applyMasterVolume() {
-    const uiVolume = Math.max(masterVolume * 0.35, 0);
-    uiClick.volume = uiVolume;
+    uiClick.volume = Math.max(masterVolume * 0.35, 0);
 
     if (!menuAudio.paused) {
         menuAudio.volume = masterVolume;
@@ -43,6 +42,13 @@ function applyMasterVolume() {
     }
 
     syncVolumeDisplay();
+}
+
+/* discretion check*/
+if (localStorage.getItem("zoneoutWarningAccepted") === "true") {
+    warningScreen.classList.add("hidden");
+    siteReady = true;
+    playMenuMusic();
 }
 
 function playClick() {
@@ -80,14 +86,16 @@ function playMenuMusic() {
     fadeAudio(menuAudio, 0, masterVolume, 600);
 }
 
-function prepareFaqMusic() {
+function playFaqMusic() {
     faqAudio.currentTime = 0;
     faqAudio.volume = 0;
     faqAudio.play().catch(() => {});
-}
 
-function revealFaqMusic() {
-    faqAudio.play().catch(() => {});
+    fadeAudio(menuAudio, menuAudio.volume || masterVolume, 0, 500, () => {
+        menuAudio.pause();
+        menuAudio.currentTime = 0;
+    });
+
     fadeAudio(faqAudio, 0, masterVolume, 600);
 }
 
@@ -98,6 +106,7 @@ volumeSlider.addEventListener("input", () => {
 
 warningProceed.addEventListener("click", () => {
     playClick();
+    localStorage.setItem("zoneoutWarningAccepted", "true");
     warningScreen.classList.add("hidden");
     siteReady = true;
     playMenuMusic();
@@ -145,6 +154,22 @@ options.forEach((opt, i) => {
     });
 });
 
+document.getElementById("openShop").addEventListener("click", () => {
+    playClick();
+    window.location.href = "/shop.html";
+});
+
+foldRSVP.addEventListener("click", () => {
+    if (!siteReady) return;
+    playClick();
+    startLoading();
+});
+
+foldLearn.addEventListener("click", () => {
+    if (!siteReady) return;
+    playClick();
+    triggerLearn();
+});
 
 /* RSVP */
 function startLoading() {
@@ -210,10 +235,7 @@ function startLoading() {
     `);
 }
 
-
 /* FAQ */
-let faqReady = false;
-
 function triggerLearn() {
     if (loadingTimer) return;
 
@@ -225,13 +247,6 @@ function triggerLearn() {
         loadingText.innerText = "Loading" + ".".repeat(dots);
     }, 400);
 
-    prepareFaqMusic();
-
-    fadeAudio(menuAudio, menuAudio.volume || masterVolume, 0, 500, () => {
-        menuAudio.pause();
-        menuAudio.currentTime = 0;
-    });
-
     const delay = Math.random() * 900 + 700;
 
     loadingTimer = setTimeout(() => {
@@ -242,14 +257,9 @@ function triggerLearn() {
         learnPage.classList.add("active");
         loadingScreen.classList.remove("active");
 
-        if (!faqReady) {
-            faqReady = true;
-        }
-
-        revealFaqMusic();
+        playFaqMusic();
     }, delay);
 }
-
 
 /* back */
 document.getElementById("backBtn").addEventListener("click", () => {
@@ -263,7 +273,6 @@ document.getElementById("backBtn").addEventListener("click", () => {
         learnPage.classList.remove("fadeOut");
     }, 600);
 });
-
 
 /* faq */
 document.querySelectorAll(".faqToggle").forEach(button => {
@@ -288,6 +297,17 @@ document.querySelectorAll(".faqAnswer a").forEach(link => {
         e.stopPropagation();
     });
 });
+
+function tryPlay() {
+    if (!siteReady) return;
+    if (menuAudio.paused && !learnPage.classList.contains("active")) {
+        menuAudio.play().catch(() => {});
+    }
+}
+
+window.addEventListener("load", tryPlay);
+document.addEventListener("click", tryPlay);
+document.addEventListener("keydown", tryPlay);
 
 applyMasterVolume();
 syncVolumeDisplay();
